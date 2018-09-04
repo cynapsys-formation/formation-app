@@ -1,0 +1,15 @@
+<h1>Books View</h1>
+
+<h1>{{ $ctrl.name }}</h1>
+
+<form ng-submit="$ctrl.save()">
+    Title:<input ng-model="$ctrl.title">
+    Author:<input ng-model="$ctrl.author">
+    <button type="submit">Save</button>
+</form>
+
+<!--
+<books-list></books-list>
+-->
+
+<books-list-cmp books-list="$ctrl.books"></books-list-cmp>
