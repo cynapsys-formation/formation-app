@@ -1,6 +1,5 @@
 <h1>Books View</h1>
 
-
 <h1>{{ name }}</h1>
 
 <form ng-submit="save()">
@@ -9,16 +8,6 @@
     <button type="submit">Save</button>
 </form>
 
+<books-list></books-list>
 
-
-
-<table class="table table-bordered table-striped table-hover">
-    <tr>
-        <th>#</th>
-        <th>Title</th>
-    </tr>
-    <tr ng-repeat="book in books track by $index">
-        <td>{{$index + 1 }}</td>
-        <td>{{book.title}}</td>
-    </tr>
-</table>
+<books-list-cmp booksList="books"></books-list-cmp>

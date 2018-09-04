@@ -1,66 +1,79 @@
-'use strict';
+(function() {
 
-angular.module('myApp.books', ['ngRoute'])
+    'use strict';
 
-.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/books', {
-    templateUrl: 'books/books.html',
-    controller: 'BooksCtrl'
-  });
-}])
+    angular.module('myApp.books', ['ngRoute'])
+        .config(config)
+        .factory('booksFactory', factoryBooks)
+        .service('booksService', ServiceBooks)
+        .controller('BooksCtrl', controller);
 
-.factory('booksFactory', ['$http', function($http) {
-    var factory = { };
+    config.$inject = ['$routeProvider'];
+    function config($routeProvider) {
+        $routeProvider.when('/books', {
+            templateUrl: 'books/books.html',
+            controller: 'BooksCtrl'
+        });
+    }
 
-    factory.getBooksApi =  $http.get('http://localhost:3000/books');
+    factoryBooks.$inject = ['$http'];
 
-    factory.addBookApi =  function(book) {
-        return $http.post('http://localhost:3000/books', book);
-    };
+    function factoryBooks($http) {
+        var factory = { };
 
-    return factory;
-}])
+        factory.getBooksApi =  $http.get('http://localhost:3000/books');
 
-.service('booksService', ['$http', function($http) {
+        factory.addBookApi =  function(book) {
+            return $http.post('http://localhost:3000/books', book);
+        };
 
-   this.getBooksApi =  $http.get('http://localhost:3000/books');
-
-   this.addBookApi =  function(book) {
-        return $http.post('http://localhost:3000/books', book);
-    };
-
-}])
-
-
-.controller('BooksCtrl', ['$scope', 'booksFactory', 'booksService', function($scope, booksFactory, booksService) {
-    $scope.name = 'name  BooksCtrl';
+        return factory;
+    }
 
 
-    booksFactory.getBooksApi.then(function(response) {
-      //  $scope.books = response.data;
-    }, function(error) {
-        // error
-    });
+    ServiceBooks.$inject = ['$http'];
+    function ServiceBooks($http) {
 
-    booksService.getBooksApi.then(function(response) {
-        $scope.books = response.data;
-    }, function(error) {
-        // error
-    });
+        this.getBooksApi = $http.get('http://localhost:3000/books');
 
-    $scope.save = function() {
 
-        var bookModel = { title: $scope.title, author: $scope.author };
+        this.addBookApi =  function(book) {
+            return $http.post('http://localhost:3000/books', book);
+        };
+    }
 
-        booksFactory.addBookApi(bookModel).then(function(response) {
-            booksService.getBooksApi.then(function(response) {
-                $scope.books = response.data;
-            }, function(error) {
-                // error
-            });
+    controller.$inject = ['$scope', 'booksFactory', 'booksService'];
+    function controller($scope, booksFactory, booksService) {
+        $scope.name = 'name  BooksCtrl';
+
+        booksFactory.getBooksApi.then(function(response) {
+            //  $scope.books = response.data;
         }, function(error) {
             // error
         });
-    };
 
-}]);
+
+        booksService.getBooksApi.then(function(response) {
+            $scope.books = response.data;
+        }, function(error) {
+            // error
+        });
+
+
+        $scope.save = function() {
+
+            var bookModel = { title: $scope.title, author: $scope.author };
+
+            booksFactory.addBookApi(bookModel).then(function(response) {
+                booksService.getBooksApi.then(function(response) {
+                    $scope.books = response.data;
+                }, function(error) {
+                    // error
+                });
+            }, function(error) {
+                // error
+            });
+        };
+    }
+
+})();
