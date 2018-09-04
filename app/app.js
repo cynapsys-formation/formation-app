@@ -5,7 +5,8 @@ angular.module('myApp', [
   'ngRoute',
   'myApp.view1',
   'myApp.view2',
-  'myApp.version'
+  'myApp.version',
+   'myApp.books'
 ])
     .run(['$rootScope', function($rootScope) {
         $rootScope.appTitle = 'App Title Global';
